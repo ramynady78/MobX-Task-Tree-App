@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/StoreProvider";
 import type { Task } from "../types/task";
@@ -19,60 +19,110 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
   const isSelected = store.isSelected(id);
   const isIndeterminate = store.isIndeterminate(id);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(node.title);
+  const [subTaskTitle, setSubTaskTitle] = useState("");
+
+  useEffect(() => {
+    setTitle(node.title);
+  }, [node.title]);
+
+  const handleTitleClick = () => {
+    setIsEditing(true);
+    store.setActiveTask(id);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleTitleBlur = () => {
+    setIsEditing(false);
+    if (title !== node.title) {
+      store.editTask(id, { title });
+    }
+  };
+
+  const handleAddSubTask = () => {
+    if (subTaskTitle.trim()) {
+      store.addSubtask(id, { title: subTaskTitle });
+      setSubTaskTitle("");
+    } else {
+      store.addSubtask(id);
+    }
+  };
+
+  const handleSubKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleAddSubTask();
+    }
+  };
+
   return (
-    <div className="task-node flex flex-col gap-1" style={{ paddingLeft: depth * 16 , marginTop: "1rem" , padding: ".5rem"}}>
+    <div className="task-node flex flex-col gap-1" style={{ paddingLeft: `${depth * 20}px`, marginTop: "1rem", padding: ".5rem" , paddingRight:"0"}}>
       <div className="flex items-center gap-2 node-task">
-
-        <div className="node-info"
-        style={{
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"space-between",
-        }}>
+        <div className="node-info flex-1">
           {hasChildren ? (
-          <button
-            className="expand-collapse toggle-btn"
-            onClick={() => store.toggleExpand(id)}
-            aria-label={expanded ? "Collapse" : "Expand"}
+            <button
+              className="expand-collapse toggle-btn"
+              onClick={() => store.toggleExpand(id)}
+              aria-label={expanded ? "Collapse" : "Expand"}
+            >
+              {expanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+            </button>
+          ) : (
+            <span className="w-4 inline-block" />
+          )}
+
+          {isEditing ? (
+            <input
+              className="inline-edit"
+              value={title}
+              onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={(e) => e.key === "Enter" && handleTitleBlur()}
+              autoFocus
+            />
+          ) : (
+            <button
+              className="task-title"
+              onClick={handleTitleClick}
+            >
+              {node.title}
+            </button>
+          )}
+
+          <Checkbox.Root
+            className="task-checkbox"
+            checked={isSelected}
+            onCheckedChange={() => store.toggleSelect(id)}
+            ref={(el) => {
+              if (el) {
+                const input = el.querySelector('input');
+                if (input) input.indeterminate = isIndeterminate;
+              }
+            }}
           >
-            {expanded ? <ChevronDownIcon/> 
-            : <ChevronRightIcon/>}
-          </button>
-        ) : (
-          <span className="w-4 inline-block" />
-        )}
-
-       
-
-        <button
-          className="task-title"
-          onClick={() => store.setActiveTask(id)}
-        >
-          {node.title}
-        </button>
-
-        <Checkbox.Root
-          className="task-checkbox"
-          checked={isSelected}
-          onCheckedChange={() => store.toggleSelect(id)}
-          ref={(el) => {
-            if (el) {
-              const input = el.querySelector('input');
-              if (input) input.indeterminate = isIndeterminate;
-            }
-          }}
-          >
-          <Checkbox.Indicator>
-            <CheckIcon />
-          </Checkbox.Indicator>
-        </Checkbox.Root>
+            <Checkbox.Indicator>
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
         </div>
-          
-        <div className="flex items-center gap-1">
-          <button className="task-button" onClick={() => store.addSubtask(id)}>
-            + Sub
-          </button>
-          <button className="task-button" onClick={() => store.deleteTask(id)}>
+
+        <div className="control-btns flex gap-1 items-center">
+          <div className="sub-add-container relative">
+            <input
+              className="task-add-input sub-task-input"
+              placeholder="Add Branch..."
+              value={subTaskTitle}
+              onChange={(e) => setSubTaskTitle(e.target.value)}
+              onKeyDown={handleSubKeyDown}
+            />
+            <button className="add-icon-btn absolute right-0 top-0 h-full px-2 text-green-500" onClick={handleAddSubTask}>
+              Add
+            </button>
+          </div>
+          <button className="task-button delete" onClick={() => store.deleteTask(id)}>
             Delete
           </button>
         </div>
