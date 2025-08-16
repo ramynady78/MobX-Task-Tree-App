@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <div className="modal-portal">
-      {/* ModalPortal content will be implemented here */}
-    </div>
-  );
+  const [container] = React.useState(() => document.createElement("div"));
+  useEffect(() => {
+    container.setAttribute("id", "modal-root");
+    document.body.appendChild(container);
+    return () => { document.body.removeChild(container); };
+  }, [container]);
+  return createPortal(children, container);
 };
