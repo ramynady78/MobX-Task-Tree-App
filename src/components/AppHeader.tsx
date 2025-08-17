@@ -6,16 +6,17 @@ export const AppHeader: React.FC = observer(() => {
     const store = useStore();
     
   return (
-    <div className="header flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-gray-100">
-    
-      <h1 className="text-2xl font-semibold">Task Tree</h1>
-      <input
-        className="task-input search md:w-1/3"
+    <div className="header">
+      <h1 className="text-2xl md:text-2xl font-semibold">Task Tree</h1>
+      <div className="search-and-theme">
+        <input
+        className="task-input search"
         placeholder="Search tasks..."
         value={store.searchQuery}
         onChange={(e) => store.setSearchQuery(e.target.value)}
       />
       <ThemeToggle />
+      </div>
     </div>
   );
 });

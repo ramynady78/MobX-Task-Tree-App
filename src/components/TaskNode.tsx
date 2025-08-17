@@ -3,8 +3,11 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/StoreProvider";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon, ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-4
-interface Props { id: string; depth?: number; }
+
+interface Props { 
+  id: string; 
+  depth?: number; 
+}
 
 export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
   const store = useStore();
@@ -43,6 +46,7 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
       store.editTask(id, { title });
     }
   };
+
   const handleAddSubTask = () => {
     if (subTaskTitle.trim()) {
       store.addSubtask(id, { title: subTaskTitle });
@@ -58,13 +62,19 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
     }
   };
 
+  // Limit depth indentation on mobile
+  const adjustedDepth = window.innerWidth <= 768 ? Math.min(depth, 2) : depth;
+
   return (
-    <div className="task-node flex flex-col gap-1" style={{ paddingLeft: `${depth * 20}px`}}>
-      <div className="flex items-center gap-2 node-task">
-        <div className="node-info flex-1">
+    <div 
+      className="task-node" 
+      style={{ paddingLeft: `${adjustedDepth * (window.innerWidth <= 768 ? 15 : 20)}px`}}
+    >
+      <div className="node-task">
+        <div className="node-info">
           {hasChildren ? (
             <button
-              className="expand-collapse toggle-btn"
+              className="toggle-btn"
               onClick={() => store.toggleExpand(id)}
               aria-label={expanded ? "Collapse" : "Expand"}
             >
@@ -109,23 +119,28 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
           </Checkbox.Root>
         </div>
 
-        <div className="control-btns flex gap-1 items-center">
-          <div className="sub-add-container relative">
+        <div className="control-btns">
+          <div className="sub-add-container">
             <input
               className="task-add-input sub-task-input"
-              placeholder="Add Branch..."
+              placeholder={window.innerWidth <= 480 ? "Add..." : "Add Branch..."}
               value={subTaskTitle}
               onChange={(e) => setSubTaskTitle(e.target.value)}
               onKeyDown={handleSubKeyDown}
             />
-            <button className="add-icon-btn absolute right-0 top-0 h-full px-2 text-green-500"
-            onClick={handleAddSubTask}
-            disabled={!subTaskTitle.length}>
+            <button 
+              className="add-icon-btn"
+              onClick={handleAddSubTask}
+              disabled={!subTaskTitle.length}
+            >
               Add
             </button>
           </div>
-          <button className="task-button delete" onClick={() => store.deleteTask(id)}>
-            Delete
+          <button 
+            className="task-button delete" 
+            onClick={() => store.deleteTask(id)}
+          >
+            <span className="hidden sm:inline">Delete</span>
           </button>
         </div>
       </div>

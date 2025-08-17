@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/StoreProvider";
-import { CheckCircledIcon , ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export const TaskDetails: React.FC = observer(() => {
   const store = useStore();
@@ -15,7 +15,8 @@ export const TaskDetails: React.FC = observer(() => {
   if (!task) {
     return (
       <div className="no-task">
-        Select a task to view/edit its content.
+        <p className="text-center">📝</p>
+        <p>Select a task to view/edit its content.</p>
       </div>
     );
   }
@@ -35,13 +36,13 @@ export const TaskDetails: React.FC = observer(() => {
 
   return (
     <div className="task-details">
-      <div className="flex items-center gap-2">
-        <h2>
-          {task.title}
+      <div className="flex items-center gap-2 flex-wrap">
+        <h2 className="flex items-center gap-2">
+          <span className="truncate">{task.title}</span>
           {hasChildren ? (
-            <CheckCircledIcon />
+            <CheckCircledIcon className="flex-shrink-0" />
           ) : (
-            <ExclamationTriangleIcon />
+            <ExclamationTriangleIcon className="flex-shrink-0" />
           )}
         </h2>
       </div>
@@ -61,15 +62,19 @@ export const TaskDetails: React.FC = observer(() => {
         <p><span className="font-medium">Created:</span> {creationDate}</p>
         <p><span className="font-medium">Type:</span> {isRoot ? "Root Task" : "Branch Task"}</p>
         {parent && (
-          <p><span className="font-medium">Parent:</span> {parent.title}</p>
+          <p><span className="font-medium">Parent:</span> <span className="truncate">{parent.title}</span></p>
         )}
         {hasChildren && (
           <div className="mt-2">
-            <p className="text-sm font-medium text-text-secondary">Branches:</p>
-            <ul>
+            <p className="text-sm font-medium text-text-secondary">
+              Branches ({task.childrenIds.length}):
+            </p>
+            <ul className="max-h-32 overflow-y-auto">
               {task.childrenIds.map((childId) => {
                 const child = store.tasks.get(childId);
-                return child ? <li key={childId}>{child.title}</li> : null;
+                return child ? (
+                  <li key={childId} className="truncate">{child.title}</li>
+                ) : null;
               })}
             </ul>
           </div>

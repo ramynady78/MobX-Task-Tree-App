@@ -65,9 +65,20 @@ body {
   padding: 1rem 1.5rem;
   max-width: 1400px;
 }
+.header h1{
+  flex: 1;
+}
+
+.header .search-and-theme{
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .node-container{
   height: 70vh;
   overflow-y: scroll;
+  padding-right: 1rem;
 }
 
 /* Radix UI overrides and custom styles */
@@ -499,4 +510,113 @@ body {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
+}
+
+@media (max-width: 1200px) {
+  .app-container .container {
+    flex-direction: column;
+  }
+  .app-container .container aside,
+  .app-container .container main {
+    width: 100%;
+  }
+  
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    padding: 1rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+  }
+
+  .header .search-and-theme{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .app-container .container {
+    flex-direction: column;
+    padding-top: calc(var(--header-height) + 80px);
+  }
+
+  .control-btns.task-tree{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem
+  }
+  .control-btns.task-tree .left-section{
+    width: 100%;
+  }
+  .control-btns.task-tree .left-section .task-add-input{
+    flex: 3;
+  }
+  .control-btns.task-tree .left-section .add-root{
+    flex: 1;
+  }
+  .control-btns.task-tree .right-section{
+    width: 100%;
+  }
+  .task-input.search, 
+  .task-add-input {
+    width: 100%;
+  }
+
+  .node-task{
+    padding: 1rem .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .node-task .node-info{
+    width: 100%;
+  }
+  .node-task .control-btns{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .node-task .control-btns .task-button.delete{
+      width: fit-content;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    /* font-size: 14px; */
+  }
+
+  .task-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .task-details h2 {
+    font-size: 1rem;
+  }
+
+  .task-details .details-section h3 {
+    font-size: 0.875rem;
+  }
+
+  .task-input.search, 
+  .task-add-input {
+    width: 100%;
+    font-size: 0.875rem;
+  }
 }
