@@ -15,6 +15,8 @@
   --edit-hover: #d97706;
   --delete: #ef4444;
   --delete-hover: #dc2626;
+
+  --header-height:70px;
 }
 
 .dark {
@@ -48,6 +50,21 @@ body {
   line-height: 1.5;
 }
 
+
+.header {
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-height);
+  position: fixed;
+  width: 100%;
+  z-index: 12343455;
+  background-color: var(--background);
+  margin: -1rem;
+  padding: 1rem 1.5rem;
+  max-width: 1400px;
+}
 
 /* Radix UI overrides and custom styles */
 .task-node {
@@ -247,6 +264,11 @@ body {
   color: var(--add-hover);
 }
 
+.add-icon-btn:disabled{
+  cursor: not-allowed;
+  color: var(--text-secondary);
+}
+
 .theme-toggle {
   position: relative;
   display: inline-block;
@@ -256,7 +278,7 @@ body {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+  padding: 0.75rem 0.5rem;
   font-size: 0.875rem;
   color: var(--text);
   cursor: pointer;
@@ -315,6 +337,7 @@ body {
   display: flex;
   gap: 1rem;
   width: 100%;
+  padding-top: calc(var(--header-height) + 15px);
 }
 .app-container .container aside{
   width: 70%;
@@ -324,14 +347,7 @@ body {
   display: flex;
   justify-content: center;
 }
-.header {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 
 .aside, .main {
   border-radius: 8px;

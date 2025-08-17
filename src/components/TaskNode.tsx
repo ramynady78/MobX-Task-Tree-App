@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/StoreProvider";
-import type { Task } from "../types/task";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon, ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { getAncestors } from "src/utils/tree";
 
 interface Props { id: string; depth?: number; }
 
@@ -38,11 +38,12 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
 
   const handleTitleBlur = () => {
     setIsEditing(false);
-    if (title !== node.title) {
+    if (title.trim() === "") {
+      setTitle(node.title);
+    } else if (title !== node.title) {
       store.editTask(id, { title });
     }
   };
-
   const handleAddSubTask = () => {
     if (subTaskTitle.trim()) {
       store.addSubtask(id, { title: subTaskTitle });
@@ -118,7 +119,9 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
               onChange={(e) => setSubTaskTitle(e.target.value)}
               onKeyDown={handleSubKeyDown}
             />
-            <button className="add-icon-btn absolute right-0 top-0 h-full px-2 text-green-500" onClick={handleAddSubTask}>
+            <button className="add-icon-btn absolute right-0 top-0 h-full px-2 text-green-500"
+            onClick={handleAddSubTask}
+            disabled={!subTaskTitle.length}>
               Add
             </button>
           </div>
