@@ -2,15 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import { StoreProvider } from "./store/StoreProvider";
+import {  HashRouter } from "react-router-dom";
 import "./styles/index.css";
-import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <StoreProvider>
-    <BrowserRouter basename="/MobX-Task-Tree-App">
-       <App />
-    </BrowserRouter>
-    </StoreProvider>
+    <HashRouter>
+      <StoreProvider>
+        <App />
+      </StoreProvider>
+    </HashRouter>
   </React.StrictMode>
 );
