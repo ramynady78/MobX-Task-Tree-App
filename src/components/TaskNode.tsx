@@ -3,8 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../store/StoreProvider";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon, ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { getAncestors } from "src/utils/tree";
-
+4
 interface Props { id: string; depth?: number; }
 
 export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
@@ -60,7 +59,7 @@ export const TaskNode: React.FC<Props> = observer(({ id, depth = 0 }) => {
   };
 
   return (
-    <div className="task-node flex flex-col gap-1" style={{ paddingLeft: `${depth * 20}px`, marginTop: "1rem", padding: ".5rem" , paddingRight:"0"}}>
+    <div className="task-node flex flex-col gap-1" style={{ paddingLeft: `${depth * 20}px`}}>
       <div className="flex items-center gap-2 node-task">
         <div className="node-info flex-1">
           {hasChildren ? (

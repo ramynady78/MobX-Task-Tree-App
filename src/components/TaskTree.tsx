@@ -45,7 +45,7 @@ export const TaskTree: React.FC= observer(() => {
           </div>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col node-container">
           {store.filteredRootIds.map((id) => (
             <TaskNode key={id} id={id} />
           ))}

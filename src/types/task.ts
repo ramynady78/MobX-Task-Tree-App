@@ -5,6 +5,7 @@ export interface Task {
   title: string;
   parentId: string | null;
   childrenIds: string[]; 
+  createDate: Date;
 }
 
 

@@ -33,6 +33,7 @@ export class TaskStore {
       title: partial.title?.trim() || "New Task",
       parentId,
       childrenIds: [],
+      createDate: new Date()
     };
     this.tasks.set(id, task);
 
